@@ -1,0 +1,350 @@
+/* ROOMTOUR engine: shared look of every tour.
+   A tour page loads this file and roomtour.js, then its own tour.data.js.
+   Colour does one job: a zone's category. A category is always icon + words + fill, never colour alone,
+   and on the dark stage its outline also differs by line style (solid, dashed, dotted, double). */
+:root {
+  color-scheme: light;
+  --bg:        oklch(98%  0.004  95);
+  --surface:   oklch(100% 0      95);
+  --surface-2: oklch(96.4% 0.006 95);
+  --line:      oklch(88%  0.008  95);
+  --ink:       oklch(22%  0.010  95);
+  --ink-2:     oklch(40%  0.010  95);
+  --ink-3:     oklch(46%  0.010  95);
+  --accent:    oklch(45%  0.150 255);
+  --on-accent: oklch(99%  0      0);
+
+
+  /* The stage is a dark lightbox in both page themes, so any screenshot reads the same */
+  --stage:        oklch(16.5% 0.012 262);
+  --stage-line:   oklch(30%   0.012 262);
+  --stage-ink:    oklch(88%   0.008 262);
+  --stage-dim:     oklch(9% 0.01 262 / 0.7);
+
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --s1: .25rem; --s2: .5rem; --s3: .875rem; --s4: 1.25rem; --s5: 2rem; --s6: 3.25rem;
+  --r: .5rem;
+  --r-lg: .875rem;
+  --panel: 27rem;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  --cam: 680ms;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg:        oklch(19%  0.008 250);
+    --surface:   oklch(23%  0.008 250);
+    --surface-2: oklch(27%  0.008 250);
+    --line:      oklch(36%  0.010 250);
+    --ink:       oklch(94%  0.006 250);
+    --ink-2:     oklch(80%  0.006 250);
+    --ink-3:     oklch(73%  0.008 250);
+    --accent:    oklch(78%  0.110 250);
+    --on-accent: oklch(18%  0.010 250);
+    --stage:        oklch(14.5% 0.012 262);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg:        oklch(19%  0.008 250);
+  --surface:   oklch(23%  0.008 250);
+  --surface-2: oklch(27%  0.008 250);
+  --line:      oklch(36%  0.010 250);
+  --ink:       oklch(94%  0.006 250);
+  --ink-2:     oklch(80%  0.006 250);
+  --ink-3:     oklch(73%  0.008 250);
+  --accent:    oklch(78%  0.110 250);
+  --on-accent: oklch(18%  0.010 250);
+  --stage:        oklch(14.5% 0.012 262);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 1rem/1.55 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: color-mix(in oklch, var(--accent) 28%, transparent); color: var(--ink); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+button { font: inherit; color: inherit; }
+code, .mono { font-family: var(--mono); font-size: .9em; }
+svg.i { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.app {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--panel);
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100dvh;
+}
+
+/* ---------- Masthead ---------- */
+.mast {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s4);
+  padding: var(--s3) var(--s4);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+.mast h1 {
+  margin: 0;
+  font-size: 1.0625rem; font-weight: 650; letter-spacing: -0.005em; line-height: 1.35;
+}
+.mast h1 svg { width: 1.25rem; height: 1.25rem; color: var(--ink-2); vertical-align: -0.25em; margin-right: var(--s2); }
+.mast h1 span { color: var(--ink-3); font-weight: 450; }
+.legend { display: flex; gap: var(--s2); flex-wrap: wrap; margin: 0; padding: 0; list-style: none; }
+
+/* ---------- Risk chips (icon + words + fill: never colour alone) ---------- */
+.chip {
+  display: inline-flex; align-items: center; gap: .4em;
+  padding: .2em .65em .2em .5em;
+  border-radius: 999px;
+  font-size: .8125rem; font-weight: 600; line-height: 1.4;
+  white-space: nowrap;
+}
+.chip svg { width: 1.05em; height: 1.05em; }
+
+/* ---------- Stage ---------- */
+.stage-wrap { padding: var(--s3) var(--s4) var(--s4); min-height: 0; display: flex; flex-direction: column; }
+.stage {
+  position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden;
+  background: var(--stage);
+  border-radius: var(--r-lg);
+  box-shadow: inset 0 0 0 1px var(--stage-line), 0 10px 30px -18px oklch(10% 0.02 262 / 0.6);
+  isolation: isolate;
+}
+.cam {
+  position: absolute; left: 0; top: 0;
+  transform-origin: 0 0;
+  opacity: 0;
+  transition: transform var(--cam) var(--ease), opacity 260ms ease-out;
+  will-change: transform;
+}
+.cam.on { opacity: 1; }
+.cam.cut { transition: none; }
+.cam img { display: block; user-select: none; -webkit-user-drag: none; }
+.spot {
+  position: absolute;
+  border-radius: calc(8px * var(--inv, 1));
+  box-shadow: 0 0 0 9000px var(--stage-dim);
+  outline: calc(3px * var(--inv, 1)) var(--line, solid) var(--c-stage, oklch(76% 0.17 150));
+  transition: left var(--cam) var(--ease), top var(--cam) var(--ease), width var(--cam) var(--ease), height var(--cam) var(--ease), box-shadow 300ms ease-out;
+  pointer-events: none;
+}
+.spot.none    { box-shadow: 0 0 0 9000px transparent; outline-color: transparent; }
+.spot.cut     { transition: none; }
+/* The cheat-sheet map: every zone of the scene outlined at once, nothing dimmed */
+.spot.pin { box-shadow: none; transition: none; }
+.maplayer { position: absolute; inset: 0; pointer-events: none; }
+.spot-num.at-l { top: 50%; transform-origin: right center; transform: translate(calc(-100% - 6px), -50%) scale(var(--inv, 1)); }
+.spot-num.at-r { left: 100%; top: 50%; transform-origin: left center; transform: translate(6px, -50%) scale(var(--inv, 1)); }
+.spot-num.at-t { left: 50%; transform-origin: center bottom; transform: translate(-50%, calc(-100% - 6px)) scale(var(--inv, 1)); }
+.spot-num {
+  position: absolute; left: 0; top: 0;
+  display: grid; place-items: center;
+  min-width: 26px; height: 26px; padding: 0 7px;
+  border-radius: 999px;
+  background: var(--c-stage, oklch(76% 0.17 150)); color: oklch(15% 0.02 262);
+  font: 700 13px/1 var(--sans);
+  transform: translate(-45%, -45%) scale(var(--inv, 1));
+  transform-origin: center;
+  box-shadow: 0 2px 6px oklch(5% 0.01 262 / 0.6);
+}
+.spot.none    .spot-num { display: none; }
+.stage-empty {
+  position: absolute; inset: 0; display: none; place-content: center; gap: var(--s2);
+  padding: var(--s5); text-align: center; color: var(--stage-ink); max-width: 34rem; margin: auto;
+}
+.stage-empty strong { font-size: 1.0625rem; }
+.stage.missing .stage-empty { display: grid; }
+.stage.missing .cam { display: none; }
+
+/* ---------- Panel ---------- */
+.panel {
+  min-height: 0; overflow-y: auto;
+  border-left: 1px solid var(--line);
+  background: var(--surface);
+  display: flex; flex-direction: column;
+  scrollbar-width: thin; scrollbar-color: var(--line) transparent;
+}
+/* Chapters: a strip over the stage, one segment per chapter, filled as the reader moves */
+.chapters {
+  display: flex; gap: var(--s1);
+  margin: 0 0 var(--s2); padding: 0; list-style: none;
+  overflow-x: auto; scrollbar-width: none;
+}
+.chapters { --fl: 0rem; --fr: 0rem; mask-image: linear-gradient(to right, transparent, #000 var(--fl), #000 calc(100% - var(--fr)), transparent); }
+.chapters.less { --fl: 2.5rem; }
+.chapters.more { --fr: 2.5rem; }
+.chapters li { flex: 1 1 auto; }
+.chapters button {
+  width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: .4rem;
+  border: 0; background: none; cursor: pointer; text-align: left; white-space: nowrap;
+  padding: .3rem .5rem .45rem; border-radius: 6px;
+  font-size: .8125rem; color: var(--ink-3); font-weight: 500;
+}
+.chapters button:hover { background: var(--surface-2); color: var(--ink); }
+.chapters button[aria-current="true"] { color: var(--ink); font-weight: 650; }
+.chapters .count { font-variant-numeric: tabular-nums; color: var(--ink-3); font-weight: 450; margin-left: .3em; }
+.chapters .bar { display: block; width: 100%; height: 3px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.chapters .fill { display: block; height: 100%; width: 0; background: var(--accent); transition: width 320ms var(--ease); }
+
+.step { padding: var(--s4) var(--s4) var(--s3); }
+.step h2 {
+  margin: 0 0 var(--s2);
+  font-size: 1.5rem; line-height: 1.22; font-weight: 680; letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.step .risk { margin: 0 0 var(--s4); display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; }
+.step .risk-note { font-size: .875rem; color: var(--ink-3); }
+.body { font-size: 1.0625rem; color: var(--ink); max-width: 62ch; }
+.body p { margin: 0 0 .8em; }
+.body p:last-child { margin-bottom: 0; }
+.body .ui { font-weight: 650; }
+.body .branch {
+  font-family: var(--mono); font-size: .85em;
+  padding: .05em .4em; border-radius: 5px;
+  background: color-mix(in oklch, var(--accent) 12%, var(--surface)); color: var(--accent);
+  overflow-wrap: anywhere;
+}
+.body ul.key { list-style: none; margin: .4em 0 .9em; padding: 0; display: grid; gap: .55em; }
+.body ul.key li { display: grid; grid-template-columns: auto 1fr; gap: .25em .6em; align-items: start; }
+.body ul.key li .chip { margin-top: .1em; }
+.body ul.plain { margin: .3em 0 .9em; padding-left: 1.1em; }
+.body ul.plain li { margin: .15em 0; }
+.body .aside {
+  margin-top: var(--s3); padding: var(--s3);
+  border-radius: var(--r); background: var(--surface-2);
+  font-size: .9375rem; color: var(--ink-2);
+}
+.body h3 { margin: 1.1em 0 .35em; font-size: 1rem; font-weight: 650; display: flex; align-items: center; gap: .5em; }
+
+.nav {
+  position: sticky; bottom: 0;
+  margin-top: auto;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--s2);
+  padding: var(--s3) var(--s4);
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .45em;
+  min-height: 2.5rem; padding: 0 1rem;
+  border-radius: var(--r); border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink);
+  font-weight: 600; font-size: .9375rem; cursor: pointer;
+  transition: background-color 120ms ease-out, border-color 120ms ease-out;
+}
+.btn:hover { background: var(--surface-2); }
+.btn:disabled { opacity: .45; cursor: default; background: var(--surface); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.primary:hover { background: color-mix(in oklch, var(--accent) 88%, black); }
+.pos { text-align: center; font-size: .875rem; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.pos kbd {
+  font: 600 .75rem/1 var(--sans); padding: .2em .4em; border-radius: 4px;
+  border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-2);
+}
+.pos .hint { display: block; font-size: .75rem; margin-top: .15rem; }
+
+.toc {
+  position: relative; flex: 1 1 0; min-height: 10rem; overflow-y: auto;
+  padding: 0 var(--s4) var(--s3);
+  border-top: 1px solid var(--line);
+  scrollbar-width: thin; scrollbar-color: var(--line) transparent;
+}
+.toc:empty, .toc.none { display: none; }
+.toc h3 {
+  position: sticky; top: 0; z-index: 1;
+  margin: 0 0 var(--s1); padding: var(--s3) 0 var(--s2);
+  background: var(--surface);
+  font-size: .8125rem; font-weight: 600; color: var(--ink-3);
+}
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+.toc button {
+  width: 100%; display: grid; grid-template-columns: 1.9rem 1fr auto; align-items: center; gap: .4rem;
+  border: 0; background: none; cursor: pointer; text-align: left;
+  padding: .32rem .45rem; border-radius: 6px;
+  font-size: .875rem; color: var(--ink-2);
+}
+.toc button:hover { background: var(--surface-2); color: var(--ink); }
+.toc button[aria-current="step"] { background: var(--surface-2); color: var(--ink); font-weight: 600; }
+.toc .n { font-variant-numeric: tabular-nums; color: var(--ink-3); font-size: .8125rem; }
+.toc .mark { display: inline-grid; place-items: center; width: 1.35rem; height: 1.35rem; border-radius: 999px; }
+.toc .mark svg { width: .85rem; height: .85rem; }
+.foot { margin: 0; padding: var(--s3) var(--s4); font-size: .8125rem; color: var(--ink-3); border-top: 1px solid var(--line); }
+
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 1100px) {
+  :root { --panel: 24rem; }
+  .mast { flex-wrap: wrap; row-gap: var(--s2); }
+  .legend { flex-basis: 100%; }
+}
+@media (max-width: 860px) {
+  .app { display: block; height: auto; }
+  .mast { padding: var(--s3); }
+  .legend .chip { font-size: .75rem; }
+  .stage-wrap { padding: var(--s2) var(--s3) var(--s3); position: sticky; top: 0; z-index: 2; background: var(--bg); }
+  .stage { height: 40svh; min-height: 16rem; flex: none; }
+  .panel { border-left: 0; overflow: visible; }
+  .toc { flex: none; min-height: 0; overflow: visible; }
+  .step h2 { font-size: 1.3125rem; }
+  .pos .hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --cam: 0ms; }
+  .cam { transition: opacity 120ms linear; }
+}
+
+/* ---------- Category tones ----------
+   Six tones. Each sets --c (text and solid fill on the page), --c-soft (tint), --c-stage (outline on the dark stage). */
+:root {
+  --green: oklch(44% 0.120 155);  --green-stage: oklch(76% 0.170 150);
+  --amber: oklch(47% 0.120  62);  --amber-stage: oklch(83% 0.150  82);
+  --red:   oklch(48% 0.190  27);  --red-stage:   oklch(69% 0.205  27);
+  --blue:  oklch(46% 0.150 255);  --blue-stage:  oklch(74% 0.140 250);
+  --violet:oklch(46% 0.170 300);  --violet-stage:oklch(74% 0.150 300);
+  --grey:  oklch(45% 0.012 250);  --grey-stage:  oklch(82% 0.010 250);
+  --on-solid: oklch(99% 0 0);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --green: oklch(80% 0.130 155); --amber: oklch(83% 0.120 75); --red: oklch(72% 0.170 25);
+    --blue: oklch(78% 0.110 250); --violet: oklch(78% 0.120 300); --grey: oklch(80% 0.010 250);
+    --on-solid: oklch(16% 0.010 25);
+  }
+}
+:root[data-theme="dark"] {
+  --green: oklch(80% 0.130 155); --amber: oklch(83% 0.120 75); --red: oklch(72% 0.170 25);
+  --blue: oklch(78% 0.110 250); --violet: oklch(78% 0.120 300); --grey: oklch(80% 0.010 250);
+  --on-solid: oklch(16% 0.010 25);
+}
+.tone-green  { --c: var(--green);  --c-stage: var(--green-stage); }
+.tone-amber  { --c: var(--amber);  --c-stage: var(--amber-stage); }
+.tone-red    { --c: var(--red);    --c-stage: var(--red-stage); }
+.tone-blue   { --c: var(--blue);   --c-stage: var(--blue-stage); }
+.tone-violet { --c: var(--violet); --c-stage: var(--violet-stage); }
+.tone-grey   { --c: var(--grey);   --c-stage: var(--grey-stage); }
+[class*="tone-"] { --c-soft: color-mix(in oklch, var(--c) 13%, var(--surface)); }
+.line-solid  { --line: solid; }
+.line-dashed { --line: dashed; }
+.line-dotted { --line: dotted; }
+.line-double { --line: double; }
+
+.chip { background: var(--c-soft); color: var(--c); }
+.chip.solid { background: var(--c); color: var(--on-solid); }
+.toc .mark { color: var(--c); background: var(--c-soft); }
+.toc .mark.solid { color: var(--on-solid); background: var(--c); }
+.spot.line-double { outline-width: calc(4px * var(--inv, 1)); }
+
+/* ---------- Redaction: blur over personal data on a screenshot ---------- */
+.redact {
+  position: absolute; pointer-events: none;
+  border-radius: calc(4px * var(--inv, 1));
+  backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px);
+  background: color-mix(in oklch, oklch(60% 0.01 262) 35%, transparent);
+}
+@media print { .redact { backdrop-filter: none; background: oklch(55% 0.01 262); } }

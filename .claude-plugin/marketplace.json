@@ -1,0 +1,14 @@
+{
+  "name": "roomtour",
+  "description": "ROOMTOUR: step-by-step guided tours over real screenshots of any interface, for designers learning a new product, tool or codebase.",
+  "owner": {
+    "name": "Alex Panin"
+  },
+  "plugins": [
+    {
+      "name": "roomtour",
+      "source": "./plugins/roomtour",
+      "description": "Step-by-step guided tours over real screenshots of any interface, explained in plain words, with categories you choose for each task."
+    }
+  ]
+}
