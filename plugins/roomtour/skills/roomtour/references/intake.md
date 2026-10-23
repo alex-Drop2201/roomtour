@@ -1,47 +1,56 @@
-# Intake: the questions before each tour
+# Intake: what to tour, then one round of questions
 
-Ask once, in one round, in the user's language. Skip any question the user's message already answered. Use AskUserQuestion for the four main questions, then one short follow-up in chat for the details.
+Ask only what changes the work. You open the address before the round (Stage 1), so the options use the product's real section names.
 
-## The four main questions
+## What to tour (only when the message names nothing)
 
-1. **What do we tour?**
-   - A link to a site (public, or one you sign in to, like GitHub or mail)
-   - An app running on this computer (a local address such as `http://localhost:3000`)
-   - Screenshots I will send
-   - My product, plus its code folder so you can check what each button does
-2. **Which part?** The whole page · specific screens or a flow (they describe it) · "you decide, the main screens".
-3. **How should I explain it this time?** As to a child · as to a newcomer · as to a colleague. Preselect the default from the settings.
-4. **Categories for this tour.** Propose 2–4 categories that fit this product and task (see below), as options; the last option is "I'll name my own". Show each proposal as `label — what it means`.
+Ask this one question alone, before you open anything. Write the options in the user's voice:
 
-## The follow-up, in one message
+- A site: a public link, or one I sign in to (GitHub, mail)
+- An app running on my computer (for example http://localhost:3000)
+- Screenshots I will send
+- My product and its code folder, so you can check each button
 
-- Does it need a sign-in? If yes: "Sign in yourself in the browser window I open; I never type passwords."
-- Is there anything personal on these screens to blur (names, e-mails, faces, amounts, addresses)? Propose what you expect for this kind of product.
-- For a product with code: the folder path, if not given yet.
-- Anything that must not be touched or shown.
+The user can type the link straight into "Other". Otherwise ask for the link, address or folder in chat.
+
+## The round: one AskUserQuestion call, at most four questions
+
+Write in the user's language. Skip any question the user's message already answered.
+
+1. **Tour language** — first run only. English · Українська · Русский, with the language of the user's message first. "Other" is any other language: the content is written in it, and the tour's buttons stay in English.
+2. **Which part?** Three sizes, each with an honest step count and the real section names:
+   - A quick look: <the main screen>, about 12 steps
+   - The main screens: <sections A, B and C>, about 25 steps
+   - Everything: <all sections>, 40 or more steps
+
+   "Other" lets the user describe a flow. The plan keeps to the picked size.
+3. **How should I explain it?** As to a child · as to a newcomer · as to a colleague. AskUserQuestion cannot preselect, so put the saved default first and add "(default)" to its label. On the first run, put "As to a newcomer" first, marked "(recommended)".
+4. **Categories for this tour** — `multiSelect: true`. Up to four options, one category each, written `label — meaning`, safest first. The user ticks the ones to keep, and "Other" adds their own. If only one is left, add the opposite end yourself and say so in the plan.
+
+## Follow-ups, only when needed
+
+- **Code folder:** only when "My product and its code folder" was picked and no path was given.
+- **Account and role:** "Which account and role do you sign in with?" Ask only when permissions decide what a click does. For example, an admin sees Delete and a viewer does not.
+
+Blurring is not a question. The plan states the default: names, e-mail addresses, faces, amounts and postal addresses on screen.
 
 ## Categories: the user decides, you propose
 
-A category is what a zone is for the reader, chosen for this task. Different tasks need different categories, so never reuse a fixed set blindly. Examples to adapt:
+A category says what a click on the zone does, for this reader and this task. Propose a set that fits the product; never reuse one blindly. Examples to adapt, each listed safest first:
 
 | Task | Categories (label — meaning) |
 |---|---|
-| GitHub as a project member | Safe to look — changes nothing · Others will see it — comments, reviews, labels · Don't touch alone — merge, close, delete |
-| A public site, signed out | Safe to look · Needs an account · Others will see it |
-| A product or admin panel | Only shows · Changes data — the whole team sees it · Can't undo or leaves the app — deletes, sends, submits |
-| Personal mail | Reading · Organising — labels, archive, filters · Sends or deletes |
+| GitHub as a project member | Safe to look — changes nothing · Others will see it — comments, reviews, labels · Ask first — merge, close, delete |
+| A public site, signed out | Safe to look — changes nothing · Needs an account — asks you to sign in · Others will see it — a public trace under your name |
+| A product or admin panel | Only shows — changes nothing · Changes data — the whole team sees it · Can't undo — deletes, sends, submits, leaves the app |
+| Personal mail | Reading — changes nothing · Organising — labels, archive, filters · Sends or deletes — cannot be taken back |
 | An analytics dashboard | Metric — a number to read · Filter — changes what you see, not the data · Action — exports, alerts, edits |
-| A design tool | Viewing · Editing your copy · Shared with the team |
+| A design tool | Viewing — changes nothing · Editing your copy — only you see it · Shared with the team — others see the change |
 
-Rules for every category set:
+Rules for every set:
 
-- 2–4 categories. More is hard to tell apart.
-- Labels of three words or fewer; a one-line note for each.
-- Each category gets a different **tone**, **icon** and **line** style, so it reads without colour (see `data-format.md`). The checker fails two categories that look the same.
-- Keep red (`tone: 'red'`, often `solid: true`, `line: 'dashed'`) for "can't undo / leaves the product / affects others for real". Use green for read-only, amber for "visible to others or changes shared data", blue for "needs something first" (an account, a permission), violet or grey for neutral kinds (a metric, a filter).
-
-When the user renames or adds a category, keep their words exactly.
-
-## After the answers
-
-Write a three-line plan in chat: the scenes you will capture, the chapters, the categories. Then capture. Ask again only if a sign-in or a missing permission blocks you.
+- 2–4 categories, declared from safest to strongest. The checker reads that order.
+- Labels of three words or fewer, with one line of meaning each.
+- Each category has its own tone, its own icon AND its own line, so it reads without colour (`data-format.md`). The checker fails two categories that share a line.
+- Red is for "can't undo, leaves the product, or reaches real people": `tone: 'red'`, `line: 'double'`, `solid: true`. Green is for read-only. Amber is for "others see it" or shared data. Blue is for "needs something first", such as an account or a permission. Violet or grey suit neutral kinds, such as a metric or a filter.
+- When the user renames or adds a category, keep their words exactly.

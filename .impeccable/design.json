@@ -1,0 +1,736 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-23T14:03:02.011Z",
+  "title": "Design System: ROOMTOUR",
+  "extensions": {
+    "source": "plugins/roomtour/skills/roomtour/assets/engine/roomtour.css (engine 0.2.0)",
+    "themes": "Light values are canonical; colorMeta.<token>.dark holds the dark-theme value where the engine changes it (prefers-color-scheme: dark, or data-theme=\"dark\"). Stage tokens without a dark value are the same in both themes.",
+    "derived": {
+      "c-soft": "color-mix(in oklab, var(--c) 13%, var(--surface))",
+      "chip-border": "color-mix(in oklab, var(--c) 55%, transparent)",
+      "risk-border": "color-mix(in oklab, var(--c) 50%, transparent)",
+      "code-fill": "color-mix(in oklab, var(--accent) 12%, var(--surface))",
+      "primary-hover": "var(--accent-hover)",
+      "selection": "color-mix(in oklch, var(--accent) 28%, transparent)"
+    },
+    "lineStyles": [
+      {
+        "name": "solid",
+        "purpose": "Default category line."
+      },
+      {
+        "name": "dashed",
+        "purpose": "A distinct category line; demo: \"Others will see it\"."
+      },
+      {
+        "name": "dotted",
+        "purpose": "A distinct category line; demo: \"Needs an account\"."
+      },
+      {
+        "name": "double",
+        "purpose": "Highest consequence, with red and the solid chip; borders and outlines thicken (3px chip, 4px outline)."
+      }
+    ],
+    "icons": {
+      "family": "Inline SVG, 24px grid, 2px round stroke, no fill",
+      "names": [
+        "eye",
+        "users",
+        "alert",
+        "info",
+        "chart",
+        "flag",
+        "lock",
+        "star",
+        "check",
+        "mail",
+        "pointer",
+        "dot"
+      ]
+    },
+    "colorMeta": {
+      "accent": {
+        "role": "primary",
+        "displayName": "Tour Ink",
+        "canonical": "oklch(26% 0.015 262)",
+        "dark": "oklch(93% 0.006 250)",
+        "tonalRamp": [
+          "oklch(15% 0.015 262)",
+          "oklch(26% 0.015 262)",
+          "oklch(36% 0.015 262)",
+          "oklch(48% 0.015 262)",
+          "oklch(59% 0.015 262)",
+          "oklch(70% 0.015 262)",
+          "oklch(82% 0.015 262)",
+          "oklch(93% 0.015 262)"
+        ],
+        "hover": {
+          "canonical": "oklch(36% 0.015 262)",
+          "dark": "oklch(84% 0.006 250)"
+        }
+      },
+      "on-accent": {
+        "role": "primary",
+        "displayName": "On Tour Ink",
+        "canonical": "oklch(99% 0 0)",
+        "dark": "oklch(18% 0.010 250)",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(48% 0 0)",
+          "oklch(59% 0 0)",
+          "oklch(70% 0 0)",
+          "oklch(82% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "bg": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "oklch(98% 0.004 95)",
+        "dark": "oklch(19% 0.008 250)",
+        "tonalRamp": [
+          "oklch(15% 0.004 95)",
+          "oklch(26% 0.004 95)",
+          "oklch(37% 0.004 95)",
+          "oklch(48% 0.004 95)",
+          "oklch(59% 0.004 95)",
+          "oklch(70% 0.004 95)",
+          "oklch(82% 0.004 95)",
+          "oklch(95% 0.004 95)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Sheet",
+        "canonical": "oklch(100% 0 95)",
+        "dark": "oklch(23% 0.008 250)",
+        "tonalRamp": [
+          "oklch(15% 0 95)",
+          "oklch(26% 0 95)",
+          "oklch(37% 0 95)",
+          "oklch(48% 0 95)",
+          "oklch(59% 0 95)",
+          "oklch(70% 0 95)",
+          "oklch(82% 0 95)",
+          "oklch(95% 0 95)"
+        ]
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "Shade",
+        "canonical": "oklch(96.4% 0.006 95)",
+        "dark": "oklch(27% 0.008 250)",
+        "tonalRamp": [
+          "oklch(15% 0.006 95)",
+          "oklch(26% 0.006 95)",
+          "oklch(37% 0.006 95)",
+          "oklch(48% 0.006 95)",
+          "oklch(59% 0.006 95)",
+          "oklch(70% 0.006 95)",
+          "oklch(82% 0.006 95)",
+          "oklch(95% 0.006 95)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "oklch(88% 0.008 95)",
+        "dark": "oklch(36% 0.010 250)",
+        "tonalRamp": [
+          "oklch(15% 0.008 95)",
+          "oklch(26% 0.008 95)",
+          "oklch(37% 0.008 95)",
+          "oklch(48% 0.008 95)",
+          "oklch(59% 0.008 95)",
+          "oklch(70% 0.008 95)",
+          "oklch(82% 0.008 95)",
+          "oklch(95% 0.008 95)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(22% 0.010 95)",
+        "dark": "oklch(94% 0.006 250)",
+        "tonalRamp": [
+          "oklch(15% 0.010 95)",
+          "oklch(26% 0.010 95)",
+          "oklch(37% 0.010 95)",
+          "oklch(48% 0.010 95)",
+          "oklch(59% 0.010 95)",
+          "oklch(70% 0.010 95)",
+          "oklch(82% 0.010 95)",
+          "oklch(95% 0.010 95)"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2",
+        "canonical": "oklch(40% 0.010 95)",
+        "dark": "oklch(80% 0.006 250)",
+        "tonalRamp": [
+          "oklch(15% 0.010 95)",
+          "oklch(26% 0.010 95)",
+          "oklch(37% 0.010 95)",
+          "oklch(48% 0.010 95)",
+          "oklch(59% 0.010 95)",
+          "oklch(70% 0.010 95)",
+          "oklch(82% 0.010 95)",
+          "oklch(95% 0.010 95)"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Ink 3",
+        "canonical": "oklch(46% 0.010 95)",
+        "dark": "oklch(73% 0.008 250)",
+        "tonalRamp": [
+          "oklch(15% 0.010 95)",
+          "oklch(26% 0.010 95)",
+          "oklch(37% 0.010 95)",
+          "oklch(48% 0.010 95)",
+          "oklch(59% 0.010 95)",
+          "oklch(70% 0.010 95)",
+          "oklch(82% 0.010 95)",
+          "oklch(95% 0.010 95)"
+        ]
+      },
+      "stage": {
+        "role": "neutral",
+        "displayName": "Lightbox",
+        "canonical": "oklch(16.5% 0.012 262)",
+        "dark": "oklch(14.5% 0.012 262)",
+        "tonalRamp": [
+          "oklch(15% 0.012 262)",
+          "oklch(26% 0.012 262)",
+          "oklch(37% 0.012 262)",
+          "oklch(48% 0.012 262)",
+          "oklch(59% 0.012 262)",
+          "oklch(70% 0.012 262)",
+          "oklch(82% 0.012 262)",
+          "oklch(95% 0.012 262)"
+        ]
+      },
+      "stage-line": {
+        "role": "neutral",
+        "displayName": "Stage Rule",
+        "canonical": "oklch(30% 0.012 262)",
+        "tonalRamp": [
+          "oklch(15% 0.012 262)",
+          "oklch(26% 0.012 262)",
+          "oklch(37% 0.012 262)",
+          "oklch(48% 0.012 262)",
+          "oklch(59% 0.012 262)",
+          "oklch(70% 0.012 262)",
+          "oklch(82% 0.012 262)",
+          "oklch(95% 0.012 262)"
+        ]
+      },
+      "stage-ink": {
+        "role": "neutral",
+        "displayName": "Stage Ink",
+        "canonical": "oklch(88% 0.008 262)",
+        "tonalRamp": [
+          "oklch(15% 0.008 262)",
+          "oklch(26% 0.008 262)",
+          "oklch(37% 0.008 262)",
+          "oklch(48% 0.008 262)",
+          "oklch(59% 0.008 262)",
+          "oklch(70% 0.008 262)",
+          "oklch(82% 0.008 262)",
+          "oklch(95% 0.008 262)"
+        ]
+      },
+      "stage-dim": {
+        "role": "neutral",
+        "displayName": "Dimmer",
+        "canonical": "oklch(9% 0.01 262 / 0.7)",
+        "tonalRamp": [
+          "oklch(15% 0.01 262)",
+          "oklch(26% 0.01 262)",
+          "oklch(37% 0.01 262)",
+          "oklch(48% 0.01 262)",
+          "oklch(59% 0.01 262)",
+          "oklch(70% 0.01 262)",
+          "oklch(82% 0.01 262)",
+          "oklch(95% 0.01 262)"
+        ]
+      },
+      "halo": {
+        "role": "neutral",
+        "displayName": "Halo",
+        "canonical": "oklch(12% 0.01 262 / 0.9)",
+        "tonalRamp": [
+          "oklch(15% 0.01 262)",
+          "oklch(26% 0.01 262)",
+          "oklch(37% 0.01 262)",
+          "oklch(48% 0.01 262)",
+          "oklch(59% 0.01 262)",
+          "oklch(70% 0.01 262)",
+          "oklch(82% 0.01 262)",
+          "oklch(95% 0.01 262)"
+        ]
+      },
+      "halo-in": {
+        "role": "neutral",
+        "displayName": "Inner Halo",
+        "canonical": "oklch(12% 0.01 262 / 0.55)",
+        "tonalRamp": [
+          "oklch(15% 0.01 262)",
+          "oklch(26% 0.01 262)",
+          "oklch(37% 0.01 262)",
+          "oklch(48% 0.01 262)",
+          "oklch(59% 0.01 262)",
+          "oklch(70% 0.01 262)",
+          "oklch(82% 0.01 262)",
+          "oklch(95% 0.01 262)"
+        ]
+      },
+      "green": {
+        "role": "category",
+        "displayName": "Green (page)",
+        "canonical": "oklch(44% 0.120 155)",
+        "dark": "oklch(80% 0.130 155)",
+        "tonalRamp": [
+          "oklch(15% 0.120 155)",
+          "oklch(26% 0.120 155)",
+          "oklch(37% 0.120 155)",
+          "oklch(48% 0.120 155)",
+          "oklch(59% 0.120 155)",
+          "oklch(70% 0.120 155)",
+          "oklch(82% 0.120 155)",
+          "oklch(95% 0.120 155)"
+        ]
+      },
+      "green-stage": {
+        "role": "category",
+        "displayName": "Green (stage)",
+        "canonical": "oklch(76% 0.170 150)",
+        "tonalRamp": [
+          "oklch(15% 0.170 150)",
+          "oklch(26% 0.170 150)",
+          "oklch(37% 0.170 150)",
+          "oklch(48% 0.170 150)",
+          "oklch(59% 0.170 150)",
+          "oklch(70% 0.170 150)",
+          "oklch(82% 0.170 150)",
+          "oklch(95% 0.170 150)"
+        ]
+      },
+      "amber": {
+        "role": "category",
+        "displayName": "Amber (page)",
+        "canonical": "oklch(47% 0.120 62)",
+        "dark": "oklch(83% 0.120 75)",
+        "tonalRamp": [
+          "oklch(15% 0.120 62)",
+          "oklch(26% 0.120 62)",
+          "oklch(37% 0.120 62)",
+          "oklch(48% 0.120 62)",
+          "oklch(59% 0.120 62)",
+          "oklch(70% 0.120 62)",
+          "oklch(82% 0.120 62)",
+          "oklch(95% 0.120 62)"
+        ]
+      },
+      "amber-stage": {
+        "role": "category",
+        "displayName": "Amber (stage)",
+        "canonical": "oklch(83% 0.150 82)",
+        "tonalRamp": [
+          "oklch(15% 0.150 82)",
+          "oklch(26% 0.150 82)",
+          "oklch(37% 0.150 82)",
+          "oklch(48% 0.150 82)",
+          "oklch(59% 0.150 82)",
+          "oklch(70% 0.150 82)",
+          "oklch(82% 0.150 82)",
+          "oklch(95% 0.150 82)"
+        ]
+      },
+      "red": {
+        "role": "category",
+        "displayName": "Red (page)",
+        "canonical": "oklch(48% 0.190 27)",
+        "dark": "oklch(72% 0.170 25)",
+        "tonalRamp": [
+          "oklch(15% 0.190 27)",
+          "oklch(26% 0.190 27)",
+          "oklch(37% 0.190 27)",
+          "oklch(48% 0.190 27)",
+          "oklch(59% 0.190 27)",
+          "oklch(70% 0.190 27)",
+          "oklch(82% 0.190 27)",
+          "oklch(95% 0.190 27)"
+        ]
+      },
+      "red-stage": {
+        "role": "category",
+        "displayName": "Red (stage)",
+        "canonical": "oklch(69% 0.205 27)",
+        "tonalRamp": [
+          "oklch(15% 0.205 27)",
+          "oklch(26% 0.205 27)",
+          "oklch(37% 0.205 27)",
+          "oklch(48% 0.205 27)",
+          "oklch(59% 0.205 27)",
+          "oklch(70% 0.205 27)",
+          "oklch(82% 0.205 27)",
+          "oklch(95% 0.205 27)"
+        ]
+      },
+      "blue": {
+        "role": "category",
+        "displayName": "Blue (page)",
+        "canonical": "oklch(46% 0.150 255)",
+        "dark": "oklch(78% 0.110 250)",
+        "tonalRamp": [
+          "oklch(15% 0.150 255)",
+          "oklch(26% 0.150 255)",
+          "oklch(37% 0.150 255)",
+          "oklch(48% 0.150 255)",
+          "oklch(59% 0.150 255)",
+          "oklch(70% 0.150 255)",
+          "oklch(82% 0.150 255)",
+          "oklch(95% 0.150 255)"
+        ]
+      },
+      "blue-stage": {
+        "role": "category",
+        "displayName": "Blue (stage)",
+        "canonical": "oklch(74% 0.140 250)",
+        "tonalRamp": [
+          "oklch(15% 0.140 250)",
+          "oklch(26% 0.140 250)",
+          "oklch(37% 0.140 250)",
+          "oklch(48% 0.140 250)",
+          "oklch(59% 0.140 250)",
+          "oklch(70% 0.140 250)",
+          "oklch(82% 0.140 250)",
+          "oklch(95% 0.140 250)"
+        ]
+      },
+      "violet": {
+        "role": "category",
+        "displayName": "Violet (page)",
+        "canonical": "oklch(46% 0.170 330)",
+        "dark": "oklch(78% 0.120 330)",
+        "tonalRamp": [
+          "oklch(15% 0.170 330)",
+          "oklch(26% 0.170 330)",
+          "oklch(37% 0.170 330)",
+          "oklch(48% 0.170 330)",
+          "oklch(59% 0.170 330)",
+          "oklch(70% 0.170 330)",
+          "oklch(82% 0.170 330)",
+          "oklch(95% 0.170 330)"
+        ]
+      },
+      "violet-stage": {
+        "role": "category",
+        "displayName": "Violet (stage)",
+        "canonical": "oklch(74% 0.150 330)",
+        "tonalRamp": [
+          "oklch(15% 0.150 330)",
+          "oklch(26% 0.150 330)",
+          "oklch(37% 0.150 330)",
+          "oklch(48% 0.150 330)",
+          "oklch(59% 0.150 330)",
+          "oklch(70% 0.150 330)",
+          "oklch(82% 0.150 330)",
+          "oklch(95% 0.150 330)"
+        ]
+      },
+      "grey": {
+        "role": "category",
+        "displayName": "Grey (page)",
+        "canonical": "oklch(45% 0.012 250)",
+        "dark": "oklch(80% 0.010 250)",
+        "tonalRamp": [
+          "oklch(15% 0.012 250)",
+          "oklch(26% 0.012 250)",
+          "oklch(37% 0.012 250)",
+          "oklch(48% 0.012 250)",
+          "oklch(59% 0.012 250)",
+          "oklch(70% 0.012 250)",
+          "oklch(82% 0.012 250)",
+          "oklch(95% 0.012 250)"
+        ]
+      },
+      "grey-stage": {
+        "role": "category",
+        "displayName": "Grey (stage)",
+        "canonical": "oklch(82% 0.010 250)",
+        "tonalRamp": [
+          "oklch(15% 0.010 250)",
+          "oklch(26% 0.010 250)",
+          "oklch(37% 0.010 250)",
+          "oklch(48% 0.010 250)",
+          "oklch(59% 0.010 250)",
+          "oklch(70% 0.010 250)",
+          "oklch(82% 0.010 250)",
+          "oklch(95% 0.010 250)"
+        ]
+      },
+      "on-solid": {
+        "role": "category",
+        "displayName": "On Solid",
+        "canonical": "oklch(99% 0 0)",
+        "dark": "oklch(16% 0.010 25)",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(48% 0 0)",
+          "oklch(59% 0 0)",
+          "oklch(70% 0 0)",
+          "oklch(82% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Step title",
+        "purpose": "One per step, balanced wrap; 21px under 860px."
+      },
+      "title": {
+        "displayName": "Tour title",
+        "purpose": "Masthead; subtitle in Ink 3 at 450 after a middle dot."
+      },
+      "body": {
+        "displayName": "Explanation",
+        "purpose": "Step body, max 62ch; on-screen control names at 650."
+      },
+      "body-small": {
+        "displayName": "Note text",
+        "purpose": "Risk note, asides, via line; buttons at 600."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Chips, legend label, list headings, source line; sentence case."
+      },
+      "badge-number": {
+        "displayName": "Zone number",
+        "purpose": "Badge on the stage; 11px on a narrow stage."
+      },
+      "mono": {
+        "displayName": "Code",
+        "purpose": "File names, branches, code paths."
+      }
+    },
+    "shadows": [
+      {
+        "name": "stage-recess",
+        "value": "inset 0 0 0 1px var(--stage-line), 0 10px 30px -18px oklch(10% 0.02 262 / 0.6)",
+        "purpose": "The stage only."
+      },
+      {
+        "name": "spotlight",
+        "value": "inset 0 0 0 2px var(--halo-in), 0 0 0 4px var(--halo), 0 0 0 9000px var(--stage-dim)",
+        "purpose": "Lit zone: halo rings plus the dimmer; sizes scale by --inv."
+      },
+      {
+        "name": "spotlight-outline",
+        "value": "outline: 3px var(--ol) var(--c-stage)",
+        "purpose": "Category outline on the stage; 4px for double."
+      },
+      {
+        "name": "map-pin",
+        "value": "inset 0 0 0 1.5px var(--halo-in), 0 0 0 4px var(--halo)",
+        "purpose": "Cheat-sheet outlines, no dimmer."
+      },
+      {
+        "name": "badge-lift",
+        "value": "0 0 0 1.5px var(--halo), 0 2px 6px oklch(5% 0.01 262 / 0.6)",
+        "purpose": "Zone number badge."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "Camera, spotlight and chapter fill."
+      },
+      {
+        "name": "cam",
+        "value": "680ms",
+        "purpose": "Camera glide base; 0ms under reduced motion."
+      },
+      {
+        "name": "k",
+        "value": "0.5 to 0.9",
+        "purpose": "Per-move multiplier of --cam set by the engine from the distance: 0.45 + distance * 0.8, clamped."
+      },
+      {
+        "name": "fade",
+        "value": "180ms ease-out",
+        "purpose": "A new screenshot fades up over the stage."
+      },
+      {
+        "name": "chapter-fill",
+        "value": "320ms",
+        "purpose": "Chapter progress bar; none under reduced motion."
+      },
+      {
+        "name": "button",
+        "value": "120ms ease-out",
+        "purpose": "Button background and border."
+      },
+      {
+        "name": "reduced-motion-feedback",
+        "value": "150ms ease-out",
+        "purpose": "Outline and badge fade-in that replaces the glide."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "legend-wraps",
+        "value": "68.75em (1100px)"
+      },
+      {
+        "name": "single-column",
+        "value": "53.75em (860px)"
+      },
+      {
+        "name": "short-screen",
+        "value": "53.75em wide and 35em (560px) tall"
+      },
+      {
+        "name": "narrow-stage",
+        "value": "stage under 600px wide (engine class)"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Next and Start over.",
+      "html": "<button class=\"ds-btn ds-btn-primary\"><span>Next</span><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;gap:.45em;min-height:2.5rem;padding:0 1rem;border-radius:.5rem;border:1px solid var(--line,oklch(88% .008 95));background:var(--surface,#fff);color:var(--ink,oklch(22% .01 95));font:600 .9375rem ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif;cursor:pointer;transition:background-color 120ms ease-out,border-color 120ms ease-out}.ds-btn:focus-visible{outline:2px solid oklch(45% .15 255);outline-offset:2px}.ds-btn-primary{background:oklch(45% .15 255);border-color:oklch(45% .15 255);color:oklch(99% 0 0)}.ds-btn-primary:hover{background:color-mix(in oklch,oklch(45% .15 255) 88%,black)}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Back.",
+      "html": "<button class=\"ds-btn2\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m12 19-7-7 7-7\"/><path d=\"M19 12H5\"/></svg><span>Back</span></button>",
+      "css": ".ds-btn2{display:inline-flex;align-items:center;gap:.45em;min-height:2.5rem;padding:0 1rem;border-radius:.5rem;border:1px solid oklch(88% .008 95);background:oklch(100% 0 95);color:oklch(22% .01 95);font:600 .9375rem ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif;cursor:pointer;transition:background-color 120ms ease-out}.ds-btn2:hover{background:oklch(96.4% .006 95)}.ds-btn2:focus-visible{outline:2px solid oklch(45% .15 255);outline-offset:2px}"
+    },
+    {
+      "name": "Category Chips",
+      "kind": "chip",
+      "refersTo": "category-chip",
+      "description": "Icon + words + line style + tint; solid for the red category.",
+      "html": "<span class=\"ds-chip ds-g\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg>Safe to look</span> <span class=\"ds-chip ds-b\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\"/><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"/></svg>Needs an account</span> <span class=\"ds-chip ds-a\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/></svg>Others will see it</span> <span class=\"ds-chip ds-r\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 8v4\"/><path d=\"M12 16h.01\"/></svg>Can't undo</span>",
+      "css": ".ds-chip{display:inline-flex;align-items:center;gap:.4em;padding:.12em .6em .12em .45em;border:1.5px solid color-mix(in oklab,var(--c) 55%,transparent);border-radius:999px;font:600 .8125rem/1.4 ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif;white-space:nowrap;background:color-mix(in oklab,var(--c) 13%,#fff);color:var(--c)}.ds-chip svg{width:1.05em;height:1.05em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.ds-g{--c:oklch(44% .12 155)}.ds-b{--c:oklch(46% .15 255);border-style:dotted}.ds-a{--c:oklch(47% .12 62);border-style:dashed}.ds-r{--c:oklch(48% .19 27);border:3px double var(--c);padding-block:0;background:var(--c);color:oklch(99% 0 0)}"
+    },
+    {
+      "name": "Risk Block",
+      "kind": "card",
+      "refersTo": "risk-block",
+      "description": "What a click does, under the step title.",
+      "html": "<p class=\"ds-risk\"><span class=\"ds-rchip\">Others will see it</span><span>leaves a public trace under your name</span></p>",
+      "css": ".ds-risk{--c:oklch(47% .12 62);display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .875rem;margin:0;padding:.5rem .875rem;border:1px dashed color-mix(in oklab,var(--c) 50%,transparent);border-radius:.5rem;background:color-mix(in oklab,var(--c) 13%,#fff);font:400 .9375rem/1.45 ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif;color:oklch(22% .01 95)}.ds-rchip{padding:.12em .6em;border:1.5px dashed color-mix(in oklab,var(--c) 55%,transparent);border-radius:999px;background:#fff;color:var(--c);font-weight:600;font-size:.8125rem}"
+    },
+    {
+      "name": "Asides",
+      "kind": "card",
+      "refersTo": "aside-note",
+      "description": "note() on Shade; warn() neutral with the alert icon.",
+      "html": "<p class=\"ds-aside\"><b>Tip</b> Stars are public.</p><p class=\"ds-aside ds-warn\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 8v4\"/><path d=\"M12 16h.01\"/></svg><b>Careful</b> A fork appears in your account.</p>",
+      "css": ".ds-aside{margin:0 0 .875rem;padding:.875rem;border-radius:.5rem;background:oklch(96.4% .006 95);color:oklch(40% .01 95);font:400 .9375rem/1.5 ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif}.ds-warn{background:#fff;border:1px solid oklch(88% .008 95);color:oklch(22% .01 95)}.ds-warn svg{width:1em;height:1em;vertical-align:-.15em;margin-right:.4em;fill:none;stroke:oklch(40% .01 95);stroke-width:2}"
+    },
+    {
+      "name": "Step Rows",
+      "kind": "nav",
+      "refersTo": "step-row",
+      "description": "Chapter step list and cheat-sheet zones: number, title, category mark.",
+      "html": "<ol class=\"ds-rows\"><li><button class=\"ds-row\"><span class=\"ds-n\">5</span><span>Name and Public</span><span class=\"ds-mark\"></span></button></li><li><button class=\"ds-row\" aria-current=\"step\"><span class=\"ds-n\">6</span><span>Notifications, Fork, Star</span><span class=\"ds-mark ds-am\"></span></button></li></ol>",
+      "css": ".ds-rows{list-style:none;margin:0;padding:0;display:grid;gap:1px}.ds-row{width:100%;display:grid;grid-template-columns:1.9rem minmax(0,1fr) auto;align-items:center;gap:.4rem;border:0;background:none;cursor:pointer;text-align:left;padding:.32rem .45rem;border-radius:6px;font:400 .875rem/1.4 ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif;color:oklch(40% .01 95)}.ds-row:hover,.ds-row[aria-current=step]{background:oklch(96.4% .006 95);color:oklch(22% .01 95)}.ds-row[aria-current=step]{font-weight:600}.ds-row:focus-visible{outline:2px solid oklch(45% .15 255);outline-offset:2px}.ds-n{font-variant-numeric:tabular-nums;color:oklch(46% .01 95);font-size:.8125rem}.ds-mark{--c:oklch(44% .12 155);width:1.35rem;height:1.35rem;border-radius:999px;border:1.5px solid color-mix(in oklab,var(--c) 55%,transparent);background:color-mix(in oklab,var(--c) 13%,#fff)}.ds-am{--c:oklch(47% .12 62);border-style:dashed}"
+    },
+    {
+      "name": "Stage with Spotlight",
+      "kind": "custom",
+      "refersTo": "stage",
+      "description": "Dark lightbox, dimmed screenshot, lit zone with halo, outline and numbered badge.",
+      "html": "<div class=\"ds-stage\"><div class=\"ds-shot\"></div><div class=\"ds-spot\"><span class=\"ds-num\">6</span></div></div>",
+      "css": ".ds-stage{position:relative;height:180px;border-radius:14px;overflow:hidden;background:oklch(16.5% .012 262);box-shadow:inset 0 0 0 1px oklch(30% .012 262),0 10px 30px -18px oklch(10% .02 262 / .6)}.ds-shot{position:absolute;inset:20px 40px;background:oklch(97% 0 0);border-radius:4px}.ds-spot{position:absolute;left:120px;top:70px;width:160px;height:36px;border-radius:8px;box-shadow:inset 0 0 0 2px oklch(12% .01 262 / .55),0 0 0 4px oklch(12% .01 262 / .9),0 0 0 9000px oklch(9% .01 262 / .7);outline:3px dashed oklch(83% .15 82)}.ds-num{position:absolute;left:0;top:0;transform:translate(-50%,-50%);display:grid;place-items:center;min-width:26px;height:26px;padding:0 7px;border-radius:999px;background:oklch(83% .15 82);color:oklch(15% .02 262);font:700 13px/1 ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif;font-variant-numeric:tabular-nums;box-shadow:0 0 0 1.5px oklch(12% .01 262 / .9),0 2px 6px oklch(5% .01 262 / .6)}"
+    },
+    {
+      "name": "Chapter Strip",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "One segment per chapter, width by share of steps, filled in Tour Ink.",
+      "html": "<ul class=\"ds-ch\"><li style=\"flex:1\"><button><span>Start</span><span class=\"ds-bar\"><span style=\"width:100%\"></span></span></button></li><li style=\"flex:6\"><button aria-current=\"true\"><span>Top of the page</span><span class=\"ds-bar\"><span style=\"width:100%\"></span></span></button></li><li style=\"flex:6\"><button><span>The files</span><span class=\"ds-bar\"><span></span></span></button></li></ul>",
+      "css": ".ds-ch{display:flex;gap:4px;margin:0;padding:0;list-style:none}.ds-ch li{min-width:max-content}.ds-ch button{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:.4rem;border:0;background:none;cursor:pointer;padding:.3rem .5rem .45rem;border-radius:6px;font:500 .8125rem ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif;color:oklch(46% .01 95)}.ds-ch button:hover{background:oklch(96.4% .006 95);color:oklch(22% .01 95)}.ds-ch button[aria-current=true]{color:oklch(22% .01 95);font-weight:650}.ds-ch button:focus-visible{outline:2px solid oklch(45% .15 255);outline-offset:-2px}.ds-bar{display:block;width:100%;height:3px;border-radius:2px;background:oklch(88% .008 95);overflow:hidden}.ds-bar span{display:block;height:100%;width:0;background:oklch(45% .15 255)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Lit Room",
+    "overview": "A tour page is a dark room with one lamp. The screenshot sits on a near-black stage, the camera glides to one zone, everything else drops into shadow, and the lit zone carries an outline in the colour, line style and icon of its category. Beside the room, a calm paper-white reading panel says what the zone is and what a click on it does, in plain words. The page around the stage is quiet so the toured interface is the only loud thing on screen.\n\nThe system is built for reading, not for persuading. There is one accent (a near-black graphite for movement through the tour: the Next button, the chapter progress, links), one family of six category tones that exist only to sort zones by consequence, and warm, barely tinted neutrals (hue 95) on the page against a cool blue-black stage (hue 262). Density is moderate: a 17px body at 1.55 line height, a 62ch measure, and the panel capped at 27rem or 40% of the width.\n\nEverything is local and dependency-free: system font stacks, inline SVG icons drawn at a 2px stroke, no web fonts, no images other than the captured screens.",
+    "keyCharacteristics": [
+      "Dark lightbox stage in both page themes; the page itself follows light or dark.",
+      "One zone at a time: camera glide, spotlight with a dark halo, a numbered badge.",
+      "Categories carry four redundant signals: icon, words, line style, tint.",
+      "One global step number across chapters, the same on the badge, the step list and the counter.",
+      "One accent for navigation; category tones never double as interface colour."
+    ],
+    "rules": [
+      {
+        "name": "The One Job Rule",
+        "body": "Colour sorts zones by what a click does. Nothing else on the page is coloured except the navigation accent.",
+        "section": "colors"
+      },
+      {
+        "name": "The Never Colour Alone Rule",
+        "body": "A category always shows icon + words + line style + tint together, on the stage outline, the chip, the step-row mark and the risk block. Line styles are solid, dashed, dotted and double, and a category keeps the same one everywhere.",
+        "section": "colors"
+      },
+      {
+        "name": "The Red Line Rule",
+        "body": "Red is reserved for \"can't undo, reaches real users, or data leaves\". It goes with the alert icon, the double line and the solid chip. Never use red for an ordinary or merely important zone.",
+        "section": "colors"
+      },
+      {
+        "name": "The Sentence Case Rule",
+        "body": "Every label, chip and list heading is sentence case at normal tracking. No uppercase, no letter-spaced small caps.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Count Rule",
+        "body": "Step numbers, the badge and the \"6 of 18\" counter use tabular figures so they do not jitter as the reader moves.",
+        "section": "typography"
+      },
+      {
+        "name": "The Dark Lightbox Rule",
+        "body": "The stage is near-black in both page themes, so any screenshot reads the same and every outline keeps its contrast. Never make the stage follow the page theme.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Constant Mark Rule",
+        "body": "Outlines, rings and badges are scaled by the inverse of the camera zoom, so they keep one on-screen size at any zoom.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do give every category an icon, a label, a line style and a tone, and keep the line style identical on outline, chip, mark and risk block.",
+      "Do order categories safest first, and reserve red with the double line and solid chip for \"can't undo, reaches real users, or data leaves\".",
+      "Do keep the stage near-black in both themes, with the halo beside every outline.",
+      "Do number steps once across the whole tour and show that number on the badge, the row and the counter.",
+      "Do keep feedback under reduced motion: cut the travel, keep the 150ms outline fade.",
+      "Do keep chips, labels and headings in sentence case."
+    ],
+    "donts": [
+      "Don't show a category by colour alone, or reuse a category tone as interface colour.",
+      "Don't add a colour for cautions; `warn()` stays neutral with the alert icon.",
+      "Don't let the stage follow the page theme or lose its dimmer and halo.",
+      "Don't scale outlines and badges with the camera zoom; keep them at one on-screen size.",
+      "Don't put shadows on page surfaces; depth belongs to the stage."
+    ]
+  }
+}

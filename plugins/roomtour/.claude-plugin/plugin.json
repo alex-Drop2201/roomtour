@@ -1,7 +1,7 @@
 {
   "name": "roomtour",
-  "version": "0.1.0",
-  "description": "Step-by-step guided tours over real screenshots of any interface: a camera moves zone by zone, each zone is explained in plain words and coloured by categories you choose for the task. Onboarding on first use.",
+  "version": "0.2.0",
+  "description": "Step-by-step guided tours over real screenshots of any interface: a camera moves zone by zone, and each zone is explained in plain words and marked with a category you choose for this task. Opens the site first, then asks up to four questions.",
   "author": {
     "name": "Alex Panin",
     "url": "https://github.com/alex-Drop2201"

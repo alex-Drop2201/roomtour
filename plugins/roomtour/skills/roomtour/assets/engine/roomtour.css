@@ -1,7 +1,7 @@
-/* ROOMTOUR engine: shared look of every tour.
+/* ROOMTOUR engine 0.2.0: shared look of every tour.
    A tour page loads this file and roomtour.js, then its own tour.data.js.
    Colour does one job: a zone's category. A category is always icon + words + fill, never colour alone,
-   and on the dark stage its outline also differs by line style (solid, dashed, dotted, double). */
+   and its line style (solid, dashed, dotted, double) is the same on the stage outline, the chips and the marks. */
 :root {
   color-scheme: light;
   --bg:        oklch(98%  0.004  95);
@@ -11,24 +11,28 @@
   --ink:       oklch(22%  0.010  95);
   --ink-2:     oklch(40%  0.010  95);
   --ink-3:     oklch(46%  0.010  95);
-  --accent:    oklch(45%  0.150 255);
+  --accent:    oklch(26%  0.015 262);
+  --accent-hover: oklch(36% 0.015 262);
   --on-accent: oklch(99%  0      0);
 
-
   /* The stage is a dark lightbox in both page themes, so any screenshot reads the same */
-  --stage:        oklch(16.5% 0.012 262);
-  --stage-line:   oklch(30%   0.012 262);
-  --stage-ink:    oklch(88%   0.008 262);
-  --stage-dim:     oklch(9% 0.01 262 / 0.7);
+  --stage:      oklch(16.5% 0.012 262);
+  --stage-line: oklch(30%   0.012 262);
+  --stage-ink:  oklch(88%   0.008 262);
+  --stage-dim:  oklch(9% 0.01 262 / 0.7);
+  /* A dark ring beside every outline, so it holds 3:1 on light screenshots too */
+  --halo:       oklch(12% 0.01 262 / 0.9);
+  --halo-in:    oklch(12% 0.01 262 / 0.55);
 
   --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --s1: .25rem; --s2: .5rem; --s3: .875rem; --s4: 1.25rem; --s5: 2rem; --s6: 3.25rem;
   --r: .5rem;
   --r-lg: .875rem;
-  --panel: 27rem;
+  --panel: min(27rem, 40vw);
   --ease: cubic-bezier(.16, 1, .3, 1);
   --cam: 680ms;
+  --fade: 180ms;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -40,9 +44,10 @@
     --ink:       oklch(94%  0.006 250);
     --ink-2:     oklch(80%  0.006 250);
     --ink-3:     oklch(73%  0.008 250);
-    --accent:    oklch(78%  0.110 250);
+    --accent:    oklch(93%  0.006 250);
+    --accent-hover: oklch(84% 0.006 250);
     --on-accent: oklch(18%  0.010 250);
-    --stage:        oklch(14.5% 0.012 262);
+    --stage:     oklch(14.5% 0.012 262);
   }
 }
 :root[data-theme="dark"] {
@@ -54,12 +59,14 @@
   --ink:       oklch(94%  0.006 250);
   --ink-2:     oklch(80%  0.006 250);
   --ink-3:     oklch(73%  0.008 250);
-  --accent:    oklch(78%  0.110 250);
+  --accent:    oklch(93%  0.006 250);
+  --accent-hover: oklch(84% 0.006 250);
   --on-accent: oklch(18%  0.010 250);
-  --stage:        oklch(14.5% 0.012 262);
+  --stage:     oklch(14.5% 0.012 262);
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html, body { height: 100%; }
 body {
   margin: 0;
@@ -69,10 +76,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 ::selection { background: color-mix(in oklch, var(--accent) 28%, transparent); color: var(--ink); }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#title:focus { outline: none; }
 button { font: inherit; color: inherit; }
 code, .mono { font-family: var(--mono); font-size: .9em; }
 svg.i { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Shown only when the engine did not run (no JavaScript, or the engine folder is missing) */
+.boot { max-width: 36rem; margin: var(--s6) auto; padding: 0 var(--s4); font-size: 1.0625rem; color: var(--ink); }
 
 .app {
   display: grid;
@@ -92,19 +103,24 @@ svg.i { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; s
 .mast h1 {
   margin: 0;
   font-size: 1.0625rem; font-weight: 650; letter-spacing: -0.005em; line-height: 1.35;
+  overflow-wrap: break-word; min-width: 0;
 }
 .mast h1 svg { width: 1.25rem; height: 1.25rem; color: var(--ink-2); vertical-align: -0.25em; margin-right: var(--s2); }
 .mast h1 span { color: var(--ink-3); font-weight: 450; }
+.legend-wrap { display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap; }
+.legend-label { font-size: .8125rem; font-weight: 500; color: var(--ink-3); }
 .legend { display: flex; gap: var(--s2); flex-wrap: wrap; margin: 0; padding: 0; list-style: none; }
 
-/* ---------- Risk chips (icon + words + fill: never colour alone) ---------- */
+/* ---------- Category chips (icon + words + fill + line: never colour alone) ---------- */
 .chip {
   display: inline-flex; align-items: center; gap: .4em;
-  padding: .2em .65em .2em .5em;
+  padding: .12em .6em .12em .45em;
+  border: 1.5px var(--ol, solid) color-mix(in oklab, var(--c) 55%, transparent);
   border-radius: 999px;
   font-size: .8125rem; font-weight: 600; line-height: 1.4;
   white-space: nowrap;
 }
+.chip.line-double { border-width: 3px; padding-block: 0; }
 .chip svg { width: 1.05em; height: 1.05em; }
 
 /* ---------- Stage ---------- */
@@ -115,52 +131,82 @@ svg.i { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; s
   border-radius: var(--r-lg);
   box-shadow: inset 0 0 0 1px var(--stage-line), 0 10px 30px -18px oklch(10% 0.02 262 / 0.6);
   isolation: isolate;
+  touch-action: pan-y;
 }
 .cam {
   position: absolute; left: 0; top: 0;
   transform-origin: 0 0;
-  opacity: 0;
-  transition: transform var(--cam) var(--ease), opacity 260ms ease-out;
-  will-change: transform;
+  visibility: hidden;
+  transition: transform calc(var(--cam) * var(--k, 1)) var(--ease);
 }
-.cam.on { opacity: 1; }
-.cam.cut { transition: none; }
+.cam.on { visibility: visible; will-change: transform; }
+.cam.cut, .cam.cut .spot { transition: none; }
+/* A new screen cuts in and fades up over the dark stage; the old one is already gone, so nothing ghosts */
+.cam.enter { animation: rt-in var(--fade) ease-out; }
+@keyframes rt-in { from { opacity: 0; } }
 .cam img { display: block; user-select: none; -webkit-user-drag: none; }
+.cam.broken img { visibility: hidden; }
+
 .spot {
   position: absolute;
   border-radius: calc(8px * var(--inv, 1));
-  box-shadow: 0 0 0 9000px var(--stage-dim);
-  outline: calc(3px * var(--inv, 1)) var(--line, solid) var(--c-stage, oklch(76% 0.17 150));
-  transition: left var(--cam) var(--ease), top var(--cam) var(--ease), width var(--cam) var(--ease), height var(--cam) var(--ease), box-shadow 300ms ease-out;
+  box-shadow:
+    inset 0 0 0 calc(2px * var(--inv, 1)) var(--halo-in),
+    0 0 0 calc(4px * var(--inv, 1)) var(--halo),
+    0 0 0 9000px var(--stage-dim);
+  outline: calc(3px * var(--inv, 1)) var(--ol, solid) var(--c-stage, var(--green-stage));
+  transition:
+    left   calc(var(--cam) * var(--k, 1)) var(--ease),
+    top    calc(var(--cam) * var(--k, 1)) var(--ease),
+    width  calc(var(--cam) * var(--k, 1)) var(--ease),
+    height calc(var(--cam) * var(--k, 1)) var(--ease),
+    box-shadow 300ms ease-out;
   pointer-events: none;
 }
-.spot.none    { box-shadow: 0 0 0 9000px transparent; outline-color: transparent; }
-.spot.cut     { transition: none; }
+.spot.none { box-shadow: inset 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 9000px transparent; outline-color: transparent; }
+.spot.cut  { transition: none; }
+.spot.line-double { outline-width: calc(4px * var(--inv, 1)); }
 /* The cheat-sheet map: every zone of the scene outlined at once, nothing dimmed */
-.spot.pin { box-shadow: none; transition: none; }
+.spot.pin {
+  box-shadow: inset 0 0 0 calc(1.5px * var(--inv, 1)) var(--halo-in), 0 0 0 calc(4px * var(--inv, 1)) var(--halo);
+  transition: none;
+}
+.spot.pin.big { outline: none; box-shadow: none; }
 .maplayer { position: absolute; inset: 0; pointer-events: none; }
-.spot-num.at-l { top: 50%; transform-origin: right center; transform: translate(calc(-100% - 6px), -50%) scale(var(--inv, 1)); }
-.spot-num.at-r { left: 100%; top: 50%; transform-origin: left center; transform: translate(6px, -50%) scale(var(--inv, 1)); }
-.spot-num.at-t { left: 50%; transform-origin: center bottom; transform: translate(-50%, calc(-100% - 6px)) scale(var(--inv, 1)); }
+
+/* A zone's number. It keeps one size on screen whatever the camera's zoom (scale by --inv). */
 .spot-num {
   position: absolute; left: 0; top: 0;
   display: grid; place-items: center;
-  min-width: 26px; height: 26px; padding: 0 7px;
+  min-width: 26px; height: 26px; padding: 0 7px; margin: 0; border: 0;
   border-radius: 999px;
-  background: var(--c-stage, oklch(76% 0.17 150)); color: oklch(15% 0.02 262);
+  background: var(--c-stage, var(--green-stage)); color: oklch(15% 0.02 262);
   font: 700 13px/1 var(--sans);
-  transform: translate(-45%, -45%) scale(var(--inv, 1));
-  transform-origin: center;
-  box-shadow: 0 2px 6px oklch(5% 0.01 262 / 0.6);
+  font-variant-numeric: tabular-nums;
+  transform-origin: 0 0;
+  transform: scale(var(--inv, 1)) translate(-50%, -50%);
+  box-shadow: 0 0 0 1.5px var(--halo), 0 2px 6px oklch(5% 0.01 262 / 0.6);
 }
-.spot.none    .spot-num { display: none; }
+.spot-num.at-r  { left: 100%; top: 50%;  transform: scale(var(--inv, 1)) translate(6px, -50%); }
+.spot-num.at-l  { left: 0;    top: 50%;  transform: scale(var(--inv, 1)) translate(calc(-100% - 6px), -50%); }
+.spot-num.at-t  { left: 50%;  top: 0;    transform: scale(var(--inv, 1)) translate(-50%, calc(-100% - 6px)); }
+.spot-num.at-b  { left: 50%;  top: 100%; transform: scale(var(--inv, 1)) translate(-50%, 6px); }
+.spot-num.at-in { left: 0;    top: 0;    transform: scale(var(--inv, 1)) translate(6px, 6px); }
+.stage.narrow .spot-num { min-width: 18px; height: 18px; padding: 0 4px; font-size: 11px; }
+.spot.none .spot-num { display: none; }
+.maplayer button.spot-num { pointer-events: auto; cursor: pointer; }
+.maplayer button.spot-num:hover { box-shadow: 0 0 0 2px var(--stage-ink), 0 2px 6px oklch(5% 0.01 262 / 0.6); }
+.maplayer button.spot-num:focus-visible { outline: 2px solid var(--stage-ink); outline-offset: 2px; }
+
 .stage-empty {
   position: absolute; inset: 0; display: none; place-content: center; gap: var(--s2);
   padding: var(--s5); text-align: center; color: var(--stage-ink); max-width: 34rem; margin: auto;
+  overflow-wrap: break-word;
 }
 .stage-empty strong { font-size: 1.0625rem; }
-.stage.missing .stage-empty { display: grid; }
-.stage.missing .cam { display: none; }
+.stage-empty code { color: var(--stage-ink); }
+.stage.notice .stage-empty { display: grid; }
+.stage.notice .cam { visibility: hidden; }
 
 /* ---------- Panel ---------- */
 .panel {
@@ -170,7 +216,7 @@ svg.i { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; s
   display: flex; flex-direction: column;
   scrollbar-width: thin; scrollbar-color: var(--line) transparent;
 }
-/* Chapters: a strip over the stage, one segment per chapter, filled as the reader moves */
+/* Chapters: a strip over the stage, one segment per chapter, as wide as its share of steps, filled as the reader moves */
 .chapters {
   display: flex; gap: var(--s1);
   margin: 0 0 var(--s2); padding: 0; list-style: none;
@@ -179,16 +225,16 @@ svg.i { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; s
 .chapters { --fl: 0rem; --fr: 0rem; mask-image: linear-gradient(to right, transparent, #000 var(--fl), #000 calc(100% - var(--fr)), transparent); }
 .chapters.less { --fl: 2.5rem; }
 .chapters.more { --fr: 2.5rem; }
-.chapters li { flex: 1 1 auto; }
+.chapters li { flex: var(--n, 1) 1 0; min-width: max-content; }
 .chapters button {
   width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: .4rem;
   border: 0; background: none; cursor: pointer; text-align: left; white-space: nowrap;
   padding: .3rem .5rem .45rem; border-radius: 6px;
   font-size: .8125rem; color: var(--ink-3); font-weight: 500;
 }
+.chapters button:focus-visible { outline-offset: -2px; }
 .chapters button:hover { background: var(--surface-2); color: var(--ink); }
 .chapters button[aria-current="true"] { color: var(--ink); font-weight: 650; }
-.chapters .count { font-variant-numeric: tabular-nums; color: var(--ink-3); font-weight: 450; margin-left: .3em; }
 .chapters .bar { display: block; width: 100%; height: 3px; border-radius: 2px; background: var(--line); overflow: hidden; }
 .chapters .fill { display: block; height: 100%; width: 0; background: var(--accent); transition: width 320ms var(--ease); }
 
@@ -197,22 +243,35 @@ svg.i { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; s
   margin: 0 0 var(--s2);
   font-size: 1.5rem; line-height: 1.22; font-weight: 680; letter-spacing: -0.015em;
   text-wrap: balance;
+  overflow-wrap: break-word; hyphens: auto;
 }
-.step .risk { margin: 0 0 var(--s4); display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; }
-.step .risk-note { font-size: .875rem; color: var(--ink-3); }
-.body { font-size: 1.0625rem; color: var(--ink); max-width: 62ch; }
+/* What a click does: a tinted block in the category's tone and line style */
+.step .risk {
+  margin: 0 0 var(--s4);
+  display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap;
+  padding: var(--s2) var(--s3);
+  border: 1px var(--ol, solid) color-mix(in oklab, var(--c) 50%, transparent);
+  border-radius: var(--r);
+  background: var(--c-soft);
+}
+.step .risk .chip:not(.solid) { background: var(--surface); }
+.step .risk-note { font-size: .9375rem; color: var(--ink); line-height: 1.45; overflow-wrap: break-word; }
+.body { font-size: 1.0625rem; color: var(--ink); max-width: 62ch; overflow-wrap: break-word; hyphens: auto; }
 .body p { margin: 0 0 .8em; }
 .body p:last-child { margin-bottom: 0; }
 .body .ui { font-weight: 650; }
 .body .branch {
   font-family: var(--mono); font-size: .85em;
   padding: .05em .4em; border-radius: 5px;
-  background: color-mix(in oklch, var(--accent) 12%, var(--surface)); color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 12%, var(--surface)); color: var(--accent);
   overflow-wrap: anywhere;
 }
-.body ul.key { list-style: none; margin: .4em 0 .9em; padding: 0; display: grid; gap: .55em; }
-.body ul.key li { display: grid; grid-template-columns: auto 1fr; gap: .25em .6em; align-items: start; }
-.body ul.key li .chip { margin-top: .1em; }
+.body ul.key { list-style: none; margin: .4em 0 .9em; padding: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .55em .6em; }
+.body ul.key li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .25em .6em; align-items: start; }
+@supports (grid-template-columns: subgrid) {
+  .body ul.key li { grid-column: 1 / -1; grid-template-columns: subgrid; }
+}
+.body ul.key li .chip { margin-top: .1em; justify-self: start; }
 .body ul.plain { margin: .3em 0 .9em; padding-left: 1.1em; }
 .body ul.plain li { margin: .15em 0; }
 .body .aside {
@@ -220,7 +279,21 @@ svg.i { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; s
   border-radius: var(--r); background: var(--surface-2);
   font-size: .9375rem; color: var(--ink-2);
 }
+/* A caution: same quiet surface, a border and the alert icon, ink text. No new colour. */
+.body .aside.warn { background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
+.body .aside.warn svg.i { vertical-align: -0.15em; margin-right: .4em; color: var(--ink-2); }
+/* How the reader got to this screen, shown once on arrival */
+.body .via {
+  font-size: .9375rem; color: var(--ink-2);
+  padding-bottom: .7em; margin-bottom: .9em; border-bottom: 1px solid var(--line);
+}
 .body h3 { margin: 1.1em 0 .35em; font-size: 1rem; font-weight: 650; display: flex; align-items: center; gap: .5em; }
+.body h3.zones-title { margin-top: 1.4em; font-size: .8125rem; font-weight: 600; color: var(--ink-3); }
+.body ol.zones { list-style: none; margin: 0 0 .6em; padding: 0; display: grid; gap: 1px; max-width: none; }
+.body .zones-more { font-size: .875rem; color: var(--ink-3); }
+.from { margin: var(--s3) 0 0; max-width: 62ch; font-size: .8125rem; color: var(--ink-3); overflow-wrap: anywhere; }
+.from a { color: var(--accent); text-underline-offset: .15em; }
+.from code { color: var(--ink-2); }
 
 .nav {
   position: sticky; bottom: 0;
@@ -239,9 +312,9 @@ svg.i { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; s
   transition: background-color 120ms ease-out, border-color 120ms ease-out;
 }
 .btn:hover { background: var(--surface-2); }
-.btn:disabled { opacity: .45; cursor: default; background: var(--surface); }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: .45; cursor: default; background: var(--surface); }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-.btn.primary:hover { background: color-mix(in oklch, var(--accent) 88%, black); }
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
 .pos { text-align: center; font-size: .875rem; color: var(--ink-3); font-variant-numeric: tabular-nums; }
 .pos kbd {
   font: 600 .75rem/1 var(--sans); padding: .2em .4em; border-radius: 4px;
@@ -263,27 +336,32 @@ svg.i { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; s
   font-size: .8125rem; font-weight: 600; color: var(--ink-3);
 }
 .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
-.toc button {
-  width: 100%; display: grid; grid-template-columns: 1.9rem 1fr auto; align-items: center; gap: .4rem;
+/* One row style for the chapter's steps and the cheat sheet's zones */
+.row {
+  width: 100%; display: grid; grid-template-columns: 1.9rem minmax(0, 1fr) auto; align-items: center; gap: .4rem;
   border: 0; background: none; cursor: pointer; text-align: left;
   padding: .32rem .45rem; border-radius: 6px;
-  font-size: .875rem; color: var(--ink-2);
+  font-size: .875rem; color: var(--ink-2); line-height: 1.4;
 }
-.toc button:hover { background: var(--surface-2); color: var(--ink); }
-.toc button[aria-current="step"] { background: var(--surface-2); color: var(--ink); font-weight: 600; }
-.toc .n { font-variant-numeric: tabular-nums; color: var(--ink-3); font-size: .8125rem; }
-.toc .mark { display: inline-grid; place-items: center; width: 1.35rem; height: 1.35rem; border-radius: 999px; }
-.toc .mark svg { width: .85rem; height: .85rem; }
+.row:hover { background: var(--surface-2); color: var(--ink); }
+.row[aria-current="step"] { background: var(--surface-2); color: var(--ink); font-weight: 600; }
+.row .n { font-variant-numeric: tabular-nums; color: var(--ink-3); font-size: .8125rem; }
+.row .tt { overflow-wrap: break-word; }
+.mark {
+  display: inline-grid; place-items: center; width: 1.35rem; height: 1.35rem; border-radius: 999px;
+  border: 1.5px var(--ol, solid) color-mix(in oklab, var(--c) 55%, transparent);
+}
+.mark.line-double { border-width: 3px; }
+.mark svg { width: .8rem; height: .8rem; }
 .foot { margin: 0; padding: var(--s3) var(--s4); font-size: .8125rem; color: var(--ink-3); border-top: 1px solid var(--line); }
 
-.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 
-@media (max-width: 1100px) {
-  :root { --panel: 24rem; }
+@media (max-width: 68.75em) {
   .mast { flex-wrap: wrap; row-gap: var(--s2); }
-  .legend { flex-basis: 100%; }
+  .legend-wrap { flex-basis: 100%; }
 }
-@media (max-width: 860px) {
+@media (max-width: 53.75em) {
   .app { display: block; height: auto; }
   .mast { padding: var(--s3); }
   .legend .chip { font-size: .75rem; }
@@ -294,32 +372,52 @@ svg.i { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; s
   .step h2 { font-size: 1.3125rem; }
   .pos .hint { display: none; }
 }
+/* Short screens (landscape phones, 200% zoom): the stage scrolls away, so the text gets the room */
+@media (max-width: 53.75em) and (max-height: 35em) {
+  .stage-wrap { position: static; }
+  .stage { height: 70svh; min-height: 12rem; }
+}
+@media (pointer: coarse) {
+  .btn { min-height: 2.75rem; }
+  .row { min-height: 2.75rem; }
+  .chapters button { min-height: 2.75rem; justify-content: center; }
+}
 @media (prefers-reduced-motion: reduce) {
   :root { --cam: 0ms; }
-  .cam { transition: opacity 120ms linear; }
+  /* No travel; the outline and its number still fade in, so the change is felt */
+  .spot.fa { animation: rt-ol-a 150ms ease-out; }
+  .spot.fb { animation: rt-ol-b 150ms ease-out; }
+  .spot.fa .spot-num { animation: rt-num-a 150ms ease-out; }
+  .spot.fb .spot-num { animation: rt-num-b 150ms ease-out; }
+  .chapters .fill { transition: none; }
 }
+@keyframes rt-ol-a { from { outline-color: transparent; } }
+@keyframes rt-ol-b { from { outline-color: transparent; } }
+@keyframes rt-num-a { from { opacity: 0; } }
+@keyframes rt-num-b { from { opacity: 0; } }
 
 /* ---------- Category tones ----------
-   Six tones. Each sets --c (text and solid fill on the page), --c-soft (tint), --c-stage (outline on the dark stage). */
+   Six tones. Each sets --c (text and solid fill on the page), --c-soft (tint), --c-stage (outline on the dark stage).
+   Violet sits at hue 330, away from blue, so the two stay apart for colour-blind readers. */
 :root {
   --green: oklch(44% 0.120 155);  --green-stage: oklch(76% 0.170 150);
   --amber: oklch(47% 0.120  62);  --amber-stage: oklch(83% 0.150  82);
   --red:   oklch(48% 0.190  27);  --red-stage:   oklch(69% 0.205  27);
   --blue:  oklch(46% 0.150 255);  --blue-stage:  oklch(74% 0.140 250);
-  --violet:oklch(46% 0.170 300);  --violet-stage:oklch(74% 0.150 300);
+  --violet:oklch(46% 0.170 330);  --violet-stage:oklch(74% 0.150 330);
   --grey:  oklch(45% 0.012 250);  --grey-stage:  oklch(82% 0.010 250);
   --on-solid: oklch(99% 0 0);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --green: oklch(80% 0.130 155); --amber: oklch(83% 0.120 75); --red: oklch(72% 0.170 25);
-    --blue: oklch(78% 0.110 250); --violet: oklch(78% 0.120 300); --grey: oklch(80% 0.010 250);
+    --blue: oklch(78% 0.110 250); --violet: oklch(78% 0.120 330); --grey: oklch(80% 0.010 250);
     --on-solid: oklch(16% 0.010 25);
   }
 }
 :root[data-theme="dark"] {
   --green: oklch(80% 0.130 155); --amber: oklch(83% 0.120 75); --red: oklch(72% 0.170 25);
-  --blue: oklch(78% 0.110 250); --violet: oklch(78% 0.120 300); --grey: oklch(80% 0.010 250);
+  --blue: oklch(78% 0.110 250); --violet: oklch(78% 0.120 330); --grey: oklch(80% 0.010 250);
   --on-solid: oklch(16% 0.010 25);
 }
 .tone-green  { --c: var(--green);  --c-stage: var(--green-stage); }
@@ -328,17 +426,17 @@ svg.i { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; s
 .tone-blue   { --c: var(--blue);   --c-stage: var(--blue-stage); }
 .tone-violet { --c: var(--violet); --c-stage: var(--violet-stage); }
 .tone-grey   { --c: var(--grey);   --c-stage: var(--grey-stage); }
-[class*="tone-"] { --c-soft: color-mix(in oklch, var(--c) 13%, var(--surface)); }
-.line-solid  { --line: solid; }
-.line-dashed { --line: dashed; }
-.line-dotted { --line: dotted; }
-.line-double { --line: double; }
+[class*="tone-"] { --c-soft: color-mix(in oklab, var(--c) 13%, var(--surface)); }
+/* --ol is the outline STYLE of a category; --line stays the border colour token */
+.line-solid  { --ol: solid; }
+.line-dashed { --ol: dashed; }
+.line-dotted { --ol: dotted; }
+.line-double { --ol: double; }
 
 .chip { background: var(--c-soft); color: var(--c); }
-.chip.solid { background: var(--c); color: var(--on-solid); }
-.toc .mark { color: var(--c); background: var(--c-soft); }
-.toc .mark.solid { color: var(--on-solid); background: var(--c); }
-.spot.line-double { outline-width: calc(4px * var(--inv, 1)); }
+.chip.solid { background: var(--c); color: var(--on-solid); border-color: var(--c); }
+.mark { color: var(--c); background: var(--c-soft); }
+.mark.solid { color: var(--on-solid); background: var(--c); border-color: var(--c); }
 
 /* ---------- Redaction: blur over personal data on a screenshot ---------- */
 .redact {
@@ -347,4 +445,31 @@ svg.i { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; s
   backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px);
   background: color-mix(in oklch, oklch(60% 0.01 262) 35%, transparent);
 }
-@media print { .redact { backdrop-filter: none; background: oklch(55% 0.01 262); } }
+
+/* ---------- Windows high contrast and other forced colours ---------- */
+@media (forced-colors: active) {
+  .stage { forced-color-adjust: none; }
+  .chapters .bar { forced-color-adjust: none; background: Canvas; border: 1px solid CanvasText; height: 5px; }
+  .chapters .fill { forced-color-adjust: none; background: Highlight; }
+  .chapters button[aria-current="true"] { outline: 2px solid Highlight; outline-offset: -2px; }
+  .row[aria-current="step"] { outline: 2px solid Highlight; outline-offset: -2px; }
+  .btn[aria-disabled="true"] { color: GrayText; }
+}
+
+/* ---------- Print and PDF ---------- */
+@media print {
+  .app { display: block; height: auto; }
+  .stage-wrap { position: static; padding: 0 0 var(--s3); }
+  .stage-wrap nav, .nav { display: none !important; }
+  .stage {
+    height: auto; aspect-ratio: 16 / 10; min-height: 0; flex: none; box-shadow: none;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .panel { border: 0; overflow: visible; }
+  .toc { overflow: visible; flex: none; min-height: 0; }
+  .redact {
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+    background: #6b6e75;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+}

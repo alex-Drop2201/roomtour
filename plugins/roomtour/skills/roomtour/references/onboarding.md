@@ -1,65 +1,74 @@
-# Onboarding (first use, or "set up ROOMTOUR again")
+# Onboarding (first run)
 
-Goal: in two or three minutes the designer has working settings and is already answering the questions for the first tour. Ask only what changes the work. Detect the rest yourself.
+Goal: the first tour starts at once. Onboarding asks nothing of its own. Detect the environment, pick the tours folder, then go to Stage 1. The one first-run question, the tour language, joins the Stage 1 round.
 
 ## 1. Greet in two sentences
 
-Write in the language the user wrote in (Ukrainian or English when unsure, ask once). Say what ROOMTOUR makes and that the first tour starts right after a few questions. Example in Ukrainian:
+Write in the user's language. Say what ROOMTOUR makes, and that you open the page first, then ask a few questions.
 
-> Привіт! ROOMTOUR робить покрокові тури інтерфейсами: справжні скриншоти, на яких по черзі підсвічується кожна зона з поясненням простими словами. Кілька питань — і одразу зробимо перший тур.
+- en: > Hi! ROOMTOUR makes step-by-step tours of interfaces: real screenshots, one zone at a time, explained in plain words. I'll open the page first, then ask up to four quick questions.
+- uk: > Привіт! ROOMTOUR робить покрокові тури інтерфейсами: справжні скриншоти, де зони підсвічуються по черзі й пояснюються простими словами. Спершу я відкрию сторінку, потім поставлю до чотирьох коротких питань.
+- ru: > Привет! ROOMTOUR делает пошаговые туры по интерфейсам: настоящие скриншоты, где зоны подсвечиваются по очереди и объясняются простыми словами. Сначала я открою страницу, потом задам до четырёх коротких вопросов.
 
-## 2. Detect the environment, silently
+If the message names nothing to tour, replace the second sentence with the question "What to tour" (`intake.md`).
 
-Run these and remember the results; do not show raw output unless something is missing.
+## 2. Detect, silently
 
-- Node: `node --version`. ROOMTOUR's scripts need Node 18 or newer.
-- Browser tools available in this session:
-  - Playwright MCP: tools named `mcp__playwright__*` (best: captures any width at 1:1, full pages, tall viewports).
-  - Claude's built-in browser (desktop app): tools named `mcp__Claude_Browser__*` (good for reading pages; captures up to about 800 px wide at 1:1).
-  - Claude in Chrome: tools named `mcp__claude-in-chrome__*` (the user's own signed-in Chrome; fine for reading, weaker for saving screenshots to files).
-- Impeccable: is a skill named `impeccable` in the skill list? If yes, the quality pass uses it.
-- ffmpeg: `ffmpeg -version` (optional: stitching tiles and blurring regions inside PNG files).
+Run these and show nothing unless something is missing. Do not save the results: they go stale.
 
-## 3. Ask one round of questions
+- **Node:** `node --version`. The scripts need Node 18 or newer.
+- **Browser tools in this session:**
+  - Playwright MCP (`mcp__playwright__*`): any width at 1:1, full pages, tall viewports. Check once whether it runs headless: `browser_evaluate` with `() => navigator.userAgent`. `HeadlessChrome` means there is no window, so nobody can sign in there.
+  - Claude's built-in browser (`mcp__Claude_Browser__*`, desktop app): the user can sign in in its pane. It captures 1:1 up to about 800 px wide.
+  - Claude in Chrome (`mcp__claude-in-chrome__*`): the user's own signed-in Chrome. It is weaker at saving screenshots to files.
+- **Impeccable:** a skill named `impeccable` in the skill list. Stage 7 uses it for tours that will be shared.
+- **ffmpeg:** `ffmpeg -version`, only when a tour needs tiles stitched or PNGs blurred.
 
-Use the structured question tool (AskUserQuestion) with these four questions, in the user's language. Mark one option "(recommended)" per question.
+## 3. No install stops the first run
 
-1. **Tour language** — Українська · English · Other (content in that language; the tour's buttons stay in English unless it is uk, en or ru).
-2. **How to explain by default** — as to a child (ELI5) · as to a newcomer · as to a colleague. Say that you will still ask at the start of every tour, with this as the default.
-3. **Where to keep tours** — offer a concrete path: `~/Documents/roomtour` on Mac, `%USERPROFILE%\Documents\roomtour` on Windows, or the current project folder's `tours/` if they work inside a project. Plus Other.
-4. **Which browser to capture with** — list only what is installed, and recommend Playwright when it is there. If it is not installed, offer "Install Playwright (recommended)" as an option.
+Use the browsers that are here now. When Playwright would have helped, say so in the hand-over, with the command:
 
-## 4. Fix what is missing
+`claude mcp add --scope user playwright -- npx @playwright/mcp@latest`
 
-- **Playwright chosen but not installed:** give the user this command to run in a terminal, then restart Claude Code (or open `/mcp`):
-  `claude mcp add --scope user playwright -- npx @playwright/mcp@latest`
-  Until then, continue with the built-in browser if it is there.
-- **No Node:** ask the user to install the LTS version from nodejs.org, then reopen Claude Code. Without Node you can still write a tour, but you cannot check or serve it; Chrome or Edge can open `index.html` directly.
-- **No browser tool at all:** offer to work from screenshots the user sends (they drop PNGs into the tour's `shots/` folder), and explain that measuring zones is then done by eye.
+- **No Node:** the scripts do not run, and Playwright cannot be added. Copy the engine and the page shell with your file tools:
+  - `${CLAUDE_SKILL_DIR}/assets/engine/*` → `<tours>/_roomtour/`;
+  - `${CLAUDE_SKILL_DIR}/assets/template/index.html` → `<tours>/<slug>/index.html`, with every `{{…}}` placeholder filled in;
+  - for a private tour, write `<tours>/<slug>/shots/.gitignore` with the lines `*` and `!.gitignore`.
 
-## 5. Save the settings
+  Check the data against `data-format.md` by reading it. Chrome or Edge open `index.html` directly. Suggest Node LTS from nodejs.org after this tour.
+- **No browser tool at all:** work from screenshots the user sends into the tour's `shots/` folder. Zones are then placed by eye; say so in the hand-over.
 
-Write `${CLAUDE_PLUGIN_DATA}/config.json` (or `~/.roomtour/config.json` without the plugin):
+## 4. The tours folder
+
+Default: `~/Documents/roomtour` on Mac and Linux, `%USERPROFILE%\Documents\roomtour` on Windows. Create it with the engine:
+
+`node "${CLAUDE_SKILL_DIR}/scripts/new-tour.mjs" "<tours>" --engine-only`
+
+If the folder cannot be written, for example in a sandboxed session, the command fails. Then use `<current project>/tours/` and say so in one line. Ask only if neither works.
+
+## 5. Save and show the settings
+
+Save the settings right after the Stage 1 round:
 
 ```json
 {
-  "version": 1,
-  "language": "uk",
-  "level": "child",
+  "version": 2,
+  "language": "en",
+  "level": "newcomer",
   "toursDir": "/Users/name/Documents/roomtour",
-  "browser": "playwright",
-  "impeccable": true,
-  "ffmpeg": false,
-  "updated": "2026-10-22"
+  "updated": "2026-10-23"
 }
 ```
 
-`level` is `child`, `newcomer` or `colleague`. `browser` is `playwright`, `builtin` or `chrome`.
+- `language` — the tour language: `en`, `uk` or `ru`. Another language code also works: the content is written in it, and the tour's buttons stay in English.
+- `level` — the default explanation level: `child`, `newcomer` or `colleague`. The first run saves its pick. Later tours do not change it; "roomtour settings" does.
+- `toursDir` — the tours folder, as a full path.
+- A file from version 0.1 may also hold `browser`, `impeccable` or `ffmpeg`. Ignore them, and drop them at the next save.
 
-Then create the tours folder and its engine:
+Then show the settings in one line, with the file's real path, for example:
 
-`node "${CLAUDE_SKILL_DIR}/scripts/new-tour.mjs" "<toursDir>" --engine-only`
+> Settings: tours in English, explained as to a newcomer, kept in ~/Documents/roomtour. Saved in <the real path>. Say "roomtour settings" to change them.
 
-## 6. Close and start the first tour
+## 6. Go on
 
-Three lines: the language, the tours folder, the browser. One line on how to change them later ("скажи «roomtour: налаштування»" / "say 'roomtour settings'"). Then go straight to the intake (`intake.md`) with the question "What do we tour first?". If the user already named something in their first message, use it and do not ask again.
+Continue with Stage 1. If the first message already named something to tour, use it and do not ask again.

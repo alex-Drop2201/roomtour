@@ -8,7 +8,7 @@
     {
       "name": "roomtour",
       "source": "./plugins/roomtour",
-      "description": "Step-by-step guided tours over real screenshots of any interface, explained in plain words, with categories you choose for each task."
+      "description": "Step-by-step guided tours over real screenshots of any interface, explained in plain words, each zone marked with a category you choose for the task."
     }
   ]
 }
